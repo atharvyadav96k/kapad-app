@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ export default function PartiBills() {
   const domain = BASE_URL;
   const [response, setResponse] = useState([]);
   const router = useRouter();
+  const [buffer, setBuffer] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +19,8 @@ export default function PartiBills() {
         setResponse(res.data.data);
       } catch (err) {
         console.log(err);
+      } finally {
+        setBuffer(false);
       }
     };
     fetchData();
@@ -30,6 +33,7 @@ export default function PartiBills() {
   const renderItem = ({ item }) => {
     let d = new Date(item.date);
     let date = d.toLocaleDateString();
+    let time = d.toLocaleTimeString();
     return (
       <TouchableOpacity
         onPress={() => redirect(item._id)}
@@ -38,13 +42,17 @@ export default function PartiBills() {
           marginVertical: 5,
           marginHorizontal: 14,
           borderColor: '#ccc',
-          padding: 10
-        }}>
+          padding: 10,
+        }}
+      >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Bale No: {item.baleNo}</Text>
-          <Text>Date : {date}</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Chalan No: {item.chalanNo}</Text>
+          <View>
+            <Text>Date : {date}</Text>
+            <Text>Time : {time}</Text>
+          </View>
         </View>
-        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Chalan No: {item.chalanNo}</Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Bale No: {item.baleNo}</Text>
         <Text>{item.partyName}</Text>
       </TouchableOpacity>
     );
@@ -52,7 +60,17 @@ export default function PartiBills() {
 
   return (
     <SafeAreaView>
-      <Text>{id}</Text>
+      {buffer && <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1, justifyContent: 'center', marginTop: 150 }} />}
+      {
+        !buffer && response.length === 0 && <Text 
+        style={{
+          fontWeight: 'bold',
+          fontSize: 20, 
+          textAlign: "center", 
+          marginTop: 40, 
+          color: '#aaa'
+        }}>No Sufficient data</Text>
+      }
       <FlatList
         data={response}
         renderItem={renderItem}
