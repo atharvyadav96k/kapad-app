@@ -2,7 +2,7 @@
   "expo": {
     "name": "app",
     "slug": "app",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.atharvyadav96k.app"
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +32,14 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "804368ea-3fa3-4f84-a71c-88178e7c25aa"
+      },
+      "API_KEY": "your_api_key_here",
+      "BASE_URL": "https://kapad.developeraadesh.cfd"
+    },
+    "owner": "atharvyadav96k"
   }
 }
