@@ -1,0 +1,1 @@
+exports.BASE_URL = "https://kapad.developeraadesh.cfd"

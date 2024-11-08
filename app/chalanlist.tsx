@@ -5,10 +5,10 @@ import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {storeIdInFile} from '../app/filehandel';
 import { useRouter } from 'expo-router';
-import {BASE_URL} from './env/env'
+// import {BASE_URL} from '../app/env/env'
 export default function ChalanList() {
   const router = useRouter();
-  const domain = BASE_URL;
+  const domain = 'https://kapad.developeraadesh.cfd';
   const [searchQuery, setSearch] = useState('');
   const [renderData, setRenderData] = useState([]);
   const [data, setData] = useState([]);

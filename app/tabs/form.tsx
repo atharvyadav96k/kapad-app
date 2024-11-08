@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, TextInput, Button, ActivityIndicator, Alert, FlatList, TouchableOpacity, Text } from 'react-native';
-import axios from 'axios';  
+import axios from 'axios';
 import { storeIdInFile, readIdFromFile } from '../filehandel';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
-import { BASE_URL } from '../env/env';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function FormTab() {
   const [bill, setB] = useState('');
-  const domain = BASE_URL;
+  const domain = "https://kapad.developeraadesh.cfd";
   const [name, setName] = useState('');
   const [size, setSize] = useState('');
   const [count, setCount] = useState('');
@@ -17,12 +17,13 @@ export default function FormTab() {
   const [searchQuery, setSearchQuery] = useState(''); // For search input
   const [filteredItems, setFilteredItems] = useState([]); // To hold filtered list
 
-  const sendData =async (n, c, s)=>{
+  const sendData = async (n, c, s) => {
     const response = await axios.post(
       `${domain}/product/add/${bill}`,
-      { name: n, size: s, count: c } 
+      { name: n, size: s, count: c }
     );
-  }
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     if (!(name.length > 1 && sizesCounts.length > 0)) {
@@ -32,14 +33,14 @@ export default function FormTab() {
     }
     try {
       for (const ele of sizesCounts) {
-        await sendData(name, ele.count, ele.size); 
+        await sendData(name, ele.count, ele.size);
       }
       Alert.alert('Success', 'Product added successfully!');
-      setName(''); 
+      setName('');
       setSize('');
       setCount('');
-      setSizesCounts([]); 
-      setSearchQuery(""); 
+      setSizesCounts([]);
+      setSearchQuery("");
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -47,9 +48,7 @@ export default function FormTab() {
     } finally {
       setLoading(false);
     }
-};
-
-  
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -57,7 +56,7 @@ export default function FormTab() {
         try {
           const id = await readIdFromFile();
           console.log("Stored ID:", id);
-          setB(id); 
+          setB(id);
         } catch (error) {
           console.error("Error reading ID from file:", error);
         }
@@ -66,9 +65,8 @@ export default function FormTab() {
       const fetchItem = async () => {
         try {
           const response = await axios.get(`${domain}/item/get`);
-          console.log(response.data);
+          // console.log(response.data);
           setItemList(response.data.items);
-          setFilteredItems(response.data.items); // Initialize filtered items
         } catch (error) {
           console.error("Error fetching items:", error);
         }
@@ -81,16 +79,21 @@ export default function FormTab() {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    const filtered = itemList.filter(item =>
-      item.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredItems(filtered);
+
+    if (query.trim() === '') {
+      setFilteredItems([]);
+    } else {
+      const filtered = itemList.filter(item =>
+        item.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredItems(filtered);
+    }
   };
 
   const selectItem = (itemName) => {
     setName(itemName);
-    setSearchQuery(itemName); // Show selected item in the search input
-    setFilteredItems([]); // Hide dropdown after selection
+    setSearchQuery(itemName);
+    setFilteredItems([]);
   };
 
   const addSizeCount = () => {
@@ -98,32 +101,37 @@ export default function FormTab() {
       Alert.alert('Error', 'Size and Count fields cannot be empty.');
       return;
     }
-    setSizesCounts([...sizesCounts, { size, count }]); // Add new size/count pair
-    setSize(''); // Clear size input
-    setCount(''); // Clear count input
+    setSizesCounts([...sizesCounts, { size, count }]);
+    setSize('');
+    setCount('');
   };
 
   const deleteSizeCount = (index) => {
-    // Filter out the item at the specified index
     setSizesCounts(sizesCounts.filter((_, i) => i !== index));
   };
 
-  const renderSizesCounts = () => (
-    <FlatList
-      data={sizesCounts}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({ item, index }) => (
-        <View style={styles.sizeCountItem}>
-          <Text>Size: {item.size}, Count: {item.count}</Text>
-          <Button title="Delete" onPress={() => deleteSizeCount(index)} />
-        </View>
-      )}
-    />
-  );
+  const renderSizesCounts = (item, index) => {
+    console.log(item, index)
+    return (
+      <View style={styles.sizeCountItem}>
+        <Text>Size: {item.size}, Count: {item.count}</Text>
+        <Button title="Delete" onPress={() => deleteSizeCount(index)} />
+      </View>
+    )
+  }
 
+  // <FlatList
+  //     data={sizesCounts}
+  //     keyExtractor={(item, index) => index.toString()}
+  //     renderItem={({ item, index }) => (
+  //       <View style={styles.sizeCountItem}>
+  //         <Text>Size: {item.size}, Count: {item.count}</Text>
+  //         <Button title="Delete" onPress={() => deleteSizeCount(index)} />
+  //       </View>
+  //     )}
+  //   />
   return (
-    <View style={styles.container}>
-      {/* Search Input */}
+    <ScrollView style={[styles.container]}>
       <TextInput
         style={styles.input}
         placeholder="Search Item"
@@ -131,7 +139,6 @@ export default function FormTab() {
         onChangeText={handleSearch}
       />
 
-      {/* Custom Dropdown List */}
       {filteredItems.length > 0 && (
         <FlatList
           data={filteredItems}
@@ -162,17 +169,25 @@ export default function FormTab() {
         onChangeText={setCount}
         keyboardType="numeric"
       />
-      <Button title="Add Size/Count" onPress={addSizeCount} />
-      <View style={{marginBottom: 20}}/>
-      {/* Display added sizes and counts */}
-      {renderSizesCounts()}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <Button title="Submit" onPress={handleSubmit} />
+        )}
+        <Button title="Add Size/Count" onPress={addSizeCount} />
+      </View>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <Button title="Submit" onPress={handleSubmit} />
-      )}
-    </View>
+      <View style={{ marginBottom: 20 }} />
+      {
+        sizesCounts.map((ele, index)=>{
+          return (
+            renderSizesCounts(ele, index)
+          )
+        })
+      }
+      <View style={{margin: 20}}/>
+    </ScrollView>
   );
 };
 
@@ -188,7 +203,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   dropdown: {
-    maxHeight: 150, // Limit dropdown height
+    maxHeight: 150,
     marginBottom: 15,
     borderColor: 'gray',
     borderWidth: 1,
@@ -204,7 +219,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    justifyContent: 'space-between', // Align text and button
-    alignItems: 'center', // Center vertically
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

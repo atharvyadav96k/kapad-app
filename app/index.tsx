@@ -4,9 +4,9 @@ import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity, ActivityIn
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { storeIdInFile, readIdFromFile } from "../app/loginTokenHandel"
-import {BASE_URL} from './env/env'
+// import {BASE_URL} from '../app/env/env'
 const SignUpScreen = () => {
-  const domain = BASE_URL;
+  const domain = 'https://kapad.developeraadesh.cfd';
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -63,10 +63,14 @@ const SignUpScreen = () => {
   return (
     <View style={styles.container}>
       {
+        !tokenWork && (
+          <Text style={{textAlign: 'center', fontSize: 25, fontWeight: 'bold'}}>ANANDKUMAR BHARATKUMAR & COMPANY</Text>
+        )
+      }
+      {
        tokenWork && (
           <View>
             <Text style={styles.title}>Login</Text>
-
             <TextInput
               style={styles.input}
               placeholder="username"

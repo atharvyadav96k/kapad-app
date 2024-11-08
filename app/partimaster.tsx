@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {BASE_URL} from './env/env'
+// import {BASE_URL} from '../app/env/env'
 
 export default function Partimaster() {
   const router = useRouter();
-  const domain = BASE_URL;
+  const domain = "https://kapad.developeraadesh.cfd";
   const [names, setNames] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredNames, setFilteredNames] = useState([]);

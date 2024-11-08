@@ -2,12 +2,12 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react
 import React, { useEffect, useState } from 'react';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BASE_URL } from '../env/env';
+// import { BASE_URL } from '../../app/env/env';
 import axios from 'axios';
 
 export default function PartiBills() {
   const { id } = useLocalSearchParams();
-  const domain = BASE_URL;
+  const domain = "https://kapad.developeraadesh.cfd";
   const [response, setResponse] = useState([]);
   const router = useRouter();
   const [buffer, setBuffer] = useState(true);

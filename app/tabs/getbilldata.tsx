@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { storeIdInFile, readIdFromFile } from '../filehandel';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Getbilldata = () => {
   const domain = "https://kapad.developeraadesh.cfd"
@@ -132,17 +133,30 @@ const Getbilldata = () => {
       fetchId();
     }, [])
   );
-
+  let prevName = "";
+  const displayName = (index, name) => {
+    if (index == 0) {
+      return name;
+    } else {
+      return "";
+    }
+  }
+  const displayRemark = (index, remark) => {
+    if (index == 0) {
+      return remark;
+    } else {
+      return "";
+    }
+  }
   return (
-    <View style={styles.container}>
-      
+    <ScrollView style={styles.container}>
       <View style={styles.tableHeader}>
         <Text style={styles.headerCell}>Name</Text>
-        <Text style={{width: 60}}>Size</Text>
-        <Text style={{width: 60}}>Count</Text>
+        <Text style={{ width: 60, fontWeight: 'bold'}}>Size</Text>
+        <Text style={{ width: 60, fontWeight: 'bold'}}>Count</Text>
       </View>
       {
-        buffer && (<ActivityIndicator size="large" color="#0000ff" style={{marginTop: 200}}/>)
+        buffer && (<ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 200 }} />)
       }
       {data.map((item) =>
         item.quality.map((qualityItem, index) => (
@@ -151,9 +165,14 @@ const Getbilldata = () => {
             key={`${item._id}-${index}`}
             onPress={() => handleDoubleClick(item, index)} // Handle double click
           >
-            <Text style={styles.cell}>{item.name}</Text>
-            <Text style={{width: 60}}>{qualityItem.size}</Text>
-            <Text style={{width: 60}}>{qualityItem.count}</Text>
+            <View style={styles.cell}>
+              <Text>{displayName(index, item.name)}</Text>
+              {
+                index === 0 && <Text>Remark : {item.remark}</Text>
+              }
+            </View>
+            <Text style={{ width: 60 }}>{qualityItem.size}</Text>
+            <Text style={{ width: 60 }}>{qualityItem.count}</Text>
           </TouchableOpacity>
         ))
       )}
@@ -197,7 +216,8 @@ const Getbilldata = () => {
           </View>
         </View>
       </Modal>
-    </View>
+      <View style={{ margin: 20 }} />
+    </ScrollView>
   );
 };
 

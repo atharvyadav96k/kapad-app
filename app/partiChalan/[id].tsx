@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { BASE_URL } from '../env/env';
+// import { BASE_URL } from '../../app/env/env';
 import axios from 'axios';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,7 +15,7 @@ export default function PartiChalan() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/bill-data/${id}`);
+        const response = await axios.get(`${"https://kapad.developeraadesh.cfd"}/bill-data/${id}`);
         console.log(response.data.data);
         setBuffer(false);
         setData(response.data.data);
@@ -27,26 +27,30 @@ export default function PartiChalan() {
     getData();
   }, [id]);
 
-  const displayName = (name) => {
+  const displayName = (name, remark) => {
     console.log(name)
     if (name !== prevNameRef) {
       prevNameRef = name;
       setLine = true;
       console.log("line")
-      return name;
+      return [name, remark];
     }
     setLine = false;
-    return "";
+    return ["",""];
   };
+  
   const nameRender = (items) => {
+    const [name, remark] = displayName(items.name, items.remark)
     return (
       <View>
         <View style={{ flexDirection: 'row', paddingHorizontal: 20, padding: 10 }} key={items._id}>
-          <Text style={{ flexGrow: 1 }}>{displayName(items.name)}</Text>
+          <Text style={{ flexGrow: 1 }}>{name}</Text>
           <Text style={{ width: 50 }}>{items.item.size}</Text>
           <Text style={{ width: 50 }}>{items.item.count}</Text>
         </View>
-        <Text style={{marginLeft: 20}}>Remark: {items.remark}</Text>
+        {
+          remark != "" ? <Text style={{marginLeft: 20}}>Remark: {remark}</Text> : null
+        }
         <View style={{ borderTopWidth: 1, borderColor: '#ccc' }} />
       </View>
     );

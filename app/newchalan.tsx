@@ -6,9 +6,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { storeIdInFile, readIdFromFile } from '../app/filehandel';
-import {BASE_URL} from './env/env'
+// import {BASE_URL} from '../app/env/env'
 const NameSearchDropdown = () => {
-  const domain = BASE_URL;
+  const domain = "https://kapad.developeraadesh.cfd";
   const [names, setNames] = useState([]); // Default value is an empty array
   const [userId, setId] = useState(); // User ID selected from dropdown
   const router = useRouter();
