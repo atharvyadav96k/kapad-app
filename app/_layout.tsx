@@ -21,6 +21,7 @@ export default function RootLayout() {
         <Stack.Screen name="invmaster"/>
         <Stack.Screen name="partiBills"/>
         <Stack.Screen name="partiChalan"/>
+        <Stack.Screen name="editChalan"/>
       </Stack>
     </GestureHandlerRootView>
   );

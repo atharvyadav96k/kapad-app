@@ -8,7 +8,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function Partimaster() {
   const router = useRouter();
-  const domain = "https://kapad.developeraadesh.cfd";
+  const productionCode = true;
+  const domain = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   const [names, setNames] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredNames, setFilteredNames] = useState([]);

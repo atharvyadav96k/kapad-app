@@ -6,7 +6,8 @@ import axios from 'axios';
 import {storeIdInFile, readIdFromFile} from "../app/loginTokenHandel"
 // import {BASE_URL} from '../env/env'
 const SignUpScreen = () => {
-  const domain = "https://kapad.developeraadesh.cfd";
+  const productionCode = true;
+  const domain = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,7 +24,7 @@ const SignUpScreen = () => {
       });
       console.log(response.data);
       await storeIdInFile(response.data.token)
-      router.replace('/login')
+      router.push('/')
     }catch(err){
       console.log(err.message)
       setLoginRequest(false)

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useRef} from 'react';
 import { StyleSheet, View, TextInput, Button, ActivityIndicator, Alert, FlatList, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
 import { storeIdInFile, readIdFromFile } from '../filehandel';
@@ -6,8 +6,12 @@ import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default function FormTab() {
+  const textInputRef = useRef(null);
   const [bill, setB] = useState('');
-  const domain = "https://kapad.developeraadesh.cfd";
+  const productionCode = true;
+  const domain = productionCode
+    ? 'https://application.anandkumarbharatkumar.shop'
+    : 'https://kapad.developeraadesh.cfd';
   const [name, setName] = useState('');
   const [size, setSize] = useState('');
   const [count, setCount] = useState('');
@@ -23,7 +27,6 @@ export default function FormTab() {
       { name: n, size: s, count: c }
     );
   };
-
   const handleSubmit = async () => {
     setLoading(true);
     if (!(name.length > 1 && sizesCounts.length > 0)) {

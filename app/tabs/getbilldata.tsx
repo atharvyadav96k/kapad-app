@@ -5,9 +5,12 @@ import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { storeIdInFile, readIdFromFile } from '../filehandel';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useRouter } from 'expo-router';
 
 const Getbilldata = () => {
-  const domain = "https://kapad.developeraadesh.cfd"
+  const router = useRouter()
+  const productionCode = true;
+  const domain = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   const [data, setData] = useState([]);
   const [editItem, setEditItem] = useState(null);
   const [newSize, setNewSize] = useState('');
@@ -17,14 +20,17 @@ const Getbilldata = () => {
   const [lastClickTime, setLastClickTime] = useState(0);
   const isFocused = useIsFocused();
   const [billId, setBillId] = useState('');
-  const [buffer, setBuffer] = useState(true)
+  const [buffer, setBuffer] = useState(true);
+  const [totoalMtr, setTotalMtr] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
   const getData = () => {
-    console.log("Getting data: ")
+    console.log("Getting data: ", billId)
     axios
       .get(`${domain}/product/get/${billId}`)
       .then((response) => {
-        console.log(response.data.data)
+        // console.log(response.data.data)
         setData(response.data.data);
+        displayTotalMtr(response.data.data);
         setBuffer(false)
       })
       .catch((err) => {
@@ -148,12 +154,43 @@ const Getbilldata = () => {
       return "";
     }
   }
+  const displayTotalMtr = (data) => {
+    let total = 0;
+    let count = 0;
+    data.forEach((ele) => {
+      if (Array.isArray(ele.quality)) {
+        ele.quality.forEach((qualityItem) => {
+          total += qualityItem.size * qualityItem.count;
+          count += qualityItem.count;
+        });
+      }
+    });
+    setTotalMtr(total);
+    setTotalCount(count);
+  };
+
   return (
     <ScrollView style={styles.container}>
+      <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 15}}>
+        <TouchableOpacity onPress={() => router.replace(`/editChalan/${billId}`)} style={{ backgroundColor: 'green', width: 30, height: 30, borderRadius: 10, display: 'flex', justifyContent: "center", alignItems: 'center' }}>
+          <Icon name="edit" color={'white'} size={15} />
+        </TouchableOpacity>
+      </View>
+      <View style={{ display: 'flex', flexDirection: 'row', justifyContent: "space-between", paddingHorizontal: 10 }}>
+        <View style={{ display: "flex", flexDirection: 'row' }}>
+          <Text style={{ fontSize: 18 }}>Total Mtr : </Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18, backgroundColor: 'yellow' }}>{totoalMtr}</Text>
+        </View>
+        <View style={{ display: "flex", flexDirection: 'row' }}>
+          <Text style={{ fontSize: 18 }}>Total Taga : </Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18, backgroundColor: 'yellow' }}>{totalCount}</Text>
+        </View>
+      </View>
       <View style={styles.tableHeader}>
         <Text style={styles.headerCell}>Name</Text>
-        <Text style={{ width: 60, fontWeight: 'bold'}}>Size</Text>
-        <Text style={{ width: 60, fontWeight: 'bold'}}>Count</Text>
+        <Text style={{ width: 50, fontWeight: 'bold' }}>Size</Text>
+        <Text style={{ width: 50, fontWeight: 'bold' }}>Count</Text>
+        <Text style={{ width: 60, fontWeight: 'bold' }}>Mtr</Text>
       </View>
       {
         buffer && (<ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 200 }} />)
@@ -171,8 +208,9 @@ const Getbilldata = () => {
                 index === 0 && <Text>Remark : {item.remark}</Text>
               }
             </View>
-            <Text style={{ width: 60 }}>{qualityItem.size}</Text>
-            <Text style={{ width: 60 }}>{qualityItem.count}</Text>
+            <Text style={{ width: 50 }}>{qualityItem.size}</Text>
+            <Text style={{ width: 50 }}>{qualityItem.count}</Text>
+            <Text style={{ width: 60 }}>{(qualityItem.count * qualityItem.size).toFixed(2)}</Text>
           </TouchableOpacity>
         ))
       )}

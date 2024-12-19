@@ -11,11 +11,12 @@ export default function PartiChalan() {
   const [buffer, setBuffer] = useState(true);
   let prevNameRef = "";
   let setLine = false;
-
+  const productionCode = true;
+  const url = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await axios.get(`${"https://kapad.developeraadesh.cfd"}/bill-data/${id}`);
+        const response = await axios.get(`${url}/bill-data/${id}`);
         console.log(response.data.data);
         setBuffer(false);
         setData(response.data.data);

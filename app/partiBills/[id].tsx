@@ -7,7 +7,8 @@ import axios from 'axios';
 
 export default function PartiBills() {
   const { id } = useLocalSearchParams();
-  const domain = "https://kapad.developeraadesh.cfd";
+  const productionCode = true;
+  const domain = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   const [response, setResponse] = useState([]);
   const router = useRouter();
   const [buffer, setBuffer] = useState(true);

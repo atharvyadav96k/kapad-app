@@ -8,7 +8,8 @@ import axios from 'axios';
 import { storeIdInFile, readIdFromFile } from '../app/filehandel';
 // import {BASE_URL} from '../app/env/env'
 const NameSearchDropdown = () => {
-  const domain = "https://kapad.developeraadesh.cfd";
+  const productionCode = false;
+  const domain = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   const [names, setNames] = useState([]); // Default value is an empty array
   const [userId, setId] = useState(); // User ID selected from dropdown
   const router = useRouter();
@@ -32,7 +33,14 @@ const NameSearchDropdown = () => {
     }
     setDropdownVisible(true);
   };
-
+  const getBaleNo = async ()=>{
+    try{
+      const response = await axios.get(`${domain}/getBaleNo`);
+      setBaleNo(response.data.data.count.toString());
+    }catch(err){
+      console.log(err);
+    }
+  }
   const getChalanNo = async ()=>{
     try{
       const response = await axios.get(`${domain}/getChalanNo`);
@@ -65,6 +73,7 @@ const NameSearchDropdown = () => {
     };
     fetchData();
     getChalanNo();
+    getBaleNo();
   }, []);
 
   const onChange = (event, selectedDate) => {
@@ -78,7 +87,7 @@ const NameSearchDropdown = () => {
   };
 
   const addItem = async () => {
-    if (userId && baleNo) {
+    if (baleNo) {
       try {
         console.log(userId, searchQuery, chalanNo, baleNo, date)
         const response = await axios.post(`${domain}/bill/bills`, {
@@ -91,7 +100,7 @@ const NameSearchDropdown = () => {
         console.log(response.data.savedBill);
         await storeIdInFile(response.data.savedBill._id);
         Alert.alert('Success', 'Chalan created successfully!');
-        router.push('/tabs');
+        router.replace('/tabs');
       } catch (error) {
         console.log('Error creating chalan:', error);
         Alert.alert('Error', 'Failed to create chalan.');

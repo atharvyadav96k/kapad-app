@@ -5,20 +5,20 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="homepage"
+        name="form"
         options={{
-          title: 'Home',
+          title: 'form',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="qr-code-scanner" color={color} size={size} />
+            <Icon name="assignment" color={color} size={size} />
           ),
         }}
       />
       <Tabs.Screen
-        name="form"
+        name="homepage"
         options={{
-          title: 'Form',
+          title: 'home',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="assignment" color={color} size={size} />
+            <Icon name="qr-code-scanner" color={color} size={size} />
           ),
         }}
       />

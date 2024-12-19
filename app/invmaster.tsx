@@ -5,7 +5,8 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 // import {BASE_URL} from '../app/env/env'
 export default function Partimaster() {
-  const domain = 'https://kapad.developeraadesh.cfd';
+  const productionCode = true;
+  const domain = productionCode ? 'https://application.anandkumarbharatkumar.shop' : 'https://kapad.developeraadesh.cfd';
   const [items, setItems] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);

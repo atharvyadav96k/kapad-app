@@ -8,7 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { storeIdInFile, readIdFromFile } from '../filehandel'
 
 export default function HomePage() {
-    const doamin = "https://kapad.developeraadesh.cfd"
+    const doamin = "https://application.anandkumarbharatkumar.shop"
     const [billId, setB] = useState("");
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
